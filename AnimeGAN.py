@@ -55,12 +55,12 @@ class AnimeGAN(object) :
         self.sample_dir = os.path.join(args.sample_dir, self.model_dir)
         check_folder(self.sample_dir)
 
-        self.real = tf.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='real_A')
-        self.anime = tf.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='anime_A')
-        self.anime_smooth = tf.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='anime_smooth_A')
-        self.test_real = tf.placeholder(tf.float32, [1, None, None, self.img_ch], name='test_input')
+        self.real = tf.compat.v1.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='real_A')
+        self.anime = tf.compat.v1.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='anime_A')
+        self.anime_smooth = tf.compat.v1.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch], name='anime_smooth_A')
+        self.test_real = tf.compat.v1.placeholder(tf.float32, [1, None, None, self.img_ch], name='test_input')
 
-        self.anime_gray = tf.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch],name='anime_B')
+        self.anime_gray = tf.compat.v1.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch],name='anime_B')
 
 
         self.real_image_generator = ImageGenerator('/content/AnimeGAN/dataset/train_photo', self.img_size, self.batch_size, self.data_mean)
@@ -174,7 +174,7 @@ class AnimeGAN(object) :
         self.Discriminator_loss = d_loss
 
         """ Training """
-        t_vars = tf.trainable_variables()
+        t_vars = tf.compat.v1.trainable_variables()
         G_vars = [var for var in t_vars if 'generator' in var.name]
         D_vars = [var for var in t_vars if 'discriminator' in var.name]
 
@@ -184,27 +184,27 @@ class AnimeGAN(object) :
 
 
         """" Summary """
-        self.G_loss = tf.summary.scalar("Generator_loss", self.Generator_loss)
-        self.D_loss = tf.summary.scalar("Discriminator_loss", self.Discriminator_loss)
+        self.G_loss = tf.compat.v1.summary.scalar("Generator_loss", self.Generator_loss)
+        self.D_loss = tf.compat.v1.summary.scalar("Discriminator_loss", self.Discriminator_loss)
 
-        self.G_gan = tf.summary.scalar("G_gan", g_loss)
-        self.G_vgg = tf.summary.scalar("G_vgg", t_loss)
-        self.G_init_loss = tf.summary.scalar("G_init", init_loss)
+        self.G_gan = tf.compat.v1.summary.scalar("G_gan", g_loss)
+        self.G_vgg = tf.compat.v1.summary.scalar("G_vgg", t_loss)
+        self.G_init_loss = tf.compat.v1.summary.scalar("G_init", init_loss)
 
-        self.V_loss_merge = tf.summary.merge([self.G_init_loss])
-        self.G_loss_merge = tf.summary.merge([self.G_loss, self.G_gan, self.G_vgg, self.G_init_loss])
-        self.D_loss_merge = tf.summary.merge([self.D_loss])
+        self.V_loss_merge = tf.compat.v1.summary.merge([self.G_init_loss])
+        self.G_loss_merge = tf.compat.v1.summary.merge([self.G_loss, self.G_gan, self.G_vgg, self.G_init_loss])
+        self.D_loss_merge = tf.compat.v1.summary.merge([self.D_loss])
 
 
     def train(self):
         # initialize all variables
-        self.sess.run(tf.global_variables_initializer())
+        self.sess.run(tf.compat.v1.global_variables_initializer())
 
         # saver to save model
-        self.saver = tf.train.Saver(max_to_keep=self.epoch)
+        self.saver = tf.compat.v1.train.Saver(max_to_keep=self.epoch)
 
         # summary writer
-        self.writer = tf.summary.FileWriter(self.log_dir + '/' + self.model_dir, self.sess.graph)
+        self.writer = tf.compat.v1.summary.FileWriter(self.log_dir + '/' + self.model_dir, self.sess.graph)
 
         """ Input Image"""
         real_img_op, anime_img_op, anime_smooth_op  = self.real_image_generator.load_images(), self.anime_image_generator.load_images(), self.anime_smooth_generator.load_images()
