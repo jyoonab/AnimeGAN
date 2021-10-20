@@ -63,9 +63,9 @@ class AnimeGAN(object) :
         self.anime_gray = tf.placeholder(tf.float32, [self.batch_size, self.img_size[0], self.img_size[1], self.img_ch],name='anime_B')
 
 
-        self.real_image_generator = ImageGenerator('./dataset/train_photo', self.img_size, self.batch_size, self.data_mean)
-        self.anime_image_generator = ImageGenerator('./dataset/{}'.format(self.dataset_name + '/style'), self.img_size, self.batch_size, self.data_mean)
-        self.anime_smooth_generator = ImageGenerator('./dataset/{}'.format(self.dataset_name + '/smooth'), self.img_size, self.batch_size, self.data_mean)
+        self.real_image_generator = ImageGenerator('/content/AnimeGAN/dataset/train_photo', self.img_size, self.batch_size, self.data_mean)
+        self.anime_image_generator = ImageGenerator('/content/AnimeGAN/dataset/{}'.format(self.dataset_name + '/style'), self.img_size, self.batch_size, self.data_mean)
+        self.anime_smooth_generator = ImageGenerator('/content/AnimeGAN/dataset/{}'.format(self.dataset_name + '/smooth'), self.img_size, self.batch_size, self.data_mean)
         self.dataset_num = max(self.real_image_generator.num_images, self.anime_image_generator.num_images)
 
         self.vgg = Vgg19()
@@ -90,7 +90,7 @@ class AnimeGAN(object) :
 
     def generator(self,x_init, reuse=False, scope="generator"):
 
-        with tf.variable_scope(scope, reuse=reuse) :
+        with tf.compat.v1.variable_scope(scope, reuse=reuse) :
             G = generator.G_net(x_init)
             return G.fake
 
@@ -158,7 +158,7 @@ class AnimeGAN(object) :
         # init pharse
         init_c_loss = con_loss(self.vgg, self.real, self.generated)
         init_loss = self.con_weight * init_c_loss
-        
+
         self.init_loss = init_loss
 
         # gan
@@ -301,7 +301,7 @@ class AnimeGAN(object) :
 
                     save_images(test_real, save_path+'{:03d}_a.png'.format(i), None)
                     # adjust_brightness_from_photo_to_fake
-                    save_images(test_generated, save_path+'{:03d}_b.png'.format(i), sample_file) 
+                    save_images(test_generated, save_path+'{:03d}_b.png'.format(i), sample_file)
 
 
     @property

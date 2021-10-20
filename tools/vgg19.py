@@ -9,7 +9,7 @@ VGG_MEAN = [103.939, 116.779, 123.68]
 
 
 class Vgg19:
-    def __init__(self, vgg19_npy_path='vgg19_weight/vgg19.npy'):
+    def __init__(self, vgg19_npy_path='/content/AnimeGAN/vgg19_weight/vgg19.npy'):
 
         if vgg19_npy_path is not None:
             self.data_dict = np.load(vgg19_npy_path, encoding='latin1', allow_pickle=True).item()
@@ -82,7 +82,7 @@ class Vgg19:
         return tf.nn.avg_pool(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
 
     def max_pool(self, bottom, name):
-        return tf.nn.max_pool(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
+        return tf.nn.max_pool2d(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
 
     def conv_layer(self, bottom, name):
         with tf.variable_scope(name):
