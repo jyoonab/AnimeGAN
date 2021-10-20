@@ -85,7 +85,7 @@ class Vgg19:
         return tf.nn.max_pool2d(bottom, ksize=[1, 2, 2, 1], strides=[1, 2, 2, 1], padding='SAME', name=name)
 
     def conv_layer(self, bottom, name):
-        with tf.variable_scope(name):
+        with tf.compat.v1.variable_scope(name):
             filt = self.get_conv_filter(name)
 
             conv = tf.nn.conv2d(bottom, filt, [1, 1, 1, 1], padding='SAME')
