@@ -69,7 +69,7 @@ def Unsample(inputs, filters, kernel_size=3):
         plumb through a "training" argument
         '''
     new_H, new_W = 2 * tf.shape(inputs)[1], 2 * tf.shape(inputs)[2]
-    inputs = tf.image.resize_images(inputs, [new_H, new_W])
+    inputs = tf.image.resize(inputs, [new_H, new_W])
 
     return Separable_conv2d(filters=filters, kernel_size=kernel_size, inputs=inputs)
 

@@ -16,7 +16,7 @@ weight_regularizer = None
 ##################################################################################
 
 def conv(x, channels, kernel=4, stride=2, pad=0, pad_type='zero', use_bias=True, sn=False, scope='conv_0'):
-    with tf.variable_scope(scope):
+    with tf.compat.v1.variable_scope(scope):
         if (kernel - stride) % 2 == 0 :
             pad_top = pad
             pad_bottom = pad
@@ -35,7 +35,7 @@ def conv(x, channels, kernel=4, stride=2, pad=0, pad_type='zero', use_bias=True,
             x = tf.pad(x, [[0, 0], [pad_top, pad_bottom], [pad_left, pad_right], [0, 0]], mode='REFLECT')
 
         if sn :
-            w = tf.get_variable("kernel", shape=[kernel, kernel, x.get_shape()[-1], channels], initializer=weight_init,
+            w = tf.compat.v1.get_variable("kernel", shape=[kernel, kernel, x.get_shape()[-1], channels], initializer=weight_init,
                                 regularizer=weight_regularizer)
             x = tf.nn.conv2d(input=x, filter=spectral_norm(w),
                              strides=[1, stride, stride, 1], padding='VALID')
